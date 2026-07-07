@@ -1,24 +1,16 @@
-# Current Feature: Fresh Database Cleanup
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- Determine the safest reset approach for both development and production databases.
-- Remove all test users and all user-owned data from both databases.
-- Apply Prisma migrations to both databases so schemas are current.
-- Run the available seed process where appropriate so both databases start from identical baseline data.
-- Verify development and production database contents match after cleanup.
+<!-- Add goals here -->
 
 ## Notes
 
-- App is live, but there are no real users yet.
-- Existing users and user-owned data are disposable test data.
-- Production is normally read-only by default in project rules; this feature explicitly requires production cleanup, but destructive/write actions must still state the target project and branch before execution.
-- Neon defaults: project `fancy-sound-03830381`, development branch `br-twilight-lake-amzju9vx`, production branch `br-proud-violet-am3tppgg`.
-- Need to inspect Prisma migrations, seed behavior, and database relationships before choosing truncate/reset/delete strategy.
+<!-- Add notes here -->
 
 ## History
 
@@ -98,3 +90,4 @@ In Progress
 - Tailwind v4 Preferred Syntax completed with app-owned canonical class rewrites for gradients, spacing tokens, opacity modifiers, CSS variable shorthand, and editor markdown alignment, while leaving shadcn primitives unchanged and preserving lint, typecheck, test, build, and homepage visual checks.
 - Korax Rebrand Phase 1 completed with tracked code, visible product surfaces, package metadata, docs, auth copy, verification email copy, homepage/footer/logo text, dashboard top-bar text, Stripe app info, rate-limit prefixes, demo email, and npm install-script approvals aligned to Korax.
 - Korax Rebrand Phase 2 completed with external provider resources audited and migrated or renamed across GitHub, Vercel, Neon, GitHub OAuth, Resend, Upstash Redis, Cloudflare R2, Stripe, OpenAI, and DNS/domain provider setup, Vercel env vars updated for the Korax services, Vercel deployment verified at `https://korax-plum.vercel.app/`, live smoke checks passing for auth, uploads, billing, Stripe webhook Pro updates, collections, snippets, and AI features, with email verification intentionally deferred until a real Resend sender domain is available.
+- Fresh Database Cleanup completed with dev and production Neon databases reset to matching seeded demo baselines, Prisma migrations and schema drift verified, a guarded `db:reset:data` script added, `npm run db:seed` standardized to create the Korax demo user and demo data, and `db:test` preserving baseline count checks.
