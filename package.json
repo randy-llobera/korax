@@ -18,7 +18,8 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:status": "prisma migrate status",
     "prisma:validate": "prisma validate",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "db:reset:data": "tsx scripts/reset-db-data.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
