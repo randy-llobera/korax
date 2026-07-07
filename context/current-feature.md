@@ -1,25 +1,16 @@
-# Current Feature: Korax Rebrand Phase 1
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
 <!-- Add goals here -->
-- Rebrand tracked code and visible product surfaces from the legacy product name to Korax/korax.
-- Keep the existing UI, colors, layout, dashboard structure, pricing, and feature set unchanged.
-- Update metadata, auth copy, verification email copy, homepage/footer/logo text, dashboard top-bar logo text, Stripe app info, rate-limit prefixes, demo email, and docs.
-- Use only minimal Korax positioning copy where useful: "A climbing harness carries the essentials so you can focus on the climb. Korax keeps your developer knowledge within reach."
-- Verify no tracked app references remain for legacy product-name variants or the legacy demo email.
 
 ## Notes
 
 <!-- Add notes here -->
-- Source spec: `context/features/korax-rebrand-plan.md`, Phase 1: Name-Only Code Rebrand.
-- Files expected to change: `package.json`, `package-lock.json`, `.env.example`, `README.md`, `AGENTS.md`, `src/app/layout.tsx`, `src/app/page.tsx`, auth pages, homepage components, `src/components/layout/top-bar.tsx`, auth email verification files, Stripe billing helper, rate-limit helper, seed/test scripts, `context/**/*.md`, `docs/**/*.md`, and `prototypes/homepage/index.html`.
-- Risks: broad text replacement can rewrite historical docs awkwardly; changing Redis prefixes resets rate-limit history; demo email changes affect seed/test expectations.
-- Done checklist: the legacy-name scan returns no tracked app references; `npm run typecheck`, `npm run lint`, `npm run test`, and `npm run build` pass.
 
 ## History
 
@@ -97,3 +88,4 @@ In Progress
 - Components Refactor completed with shared dashboard item form fields, pure item form payload helpers, optimistic favorite/pin toggle handling, item identity badges, auth form primitives, billing client helpers, editor shell controls, global search cleanup, and focused helper coverage.
 - Homepage Standards Refactor completed with homepage CSS module removal, Tailwind and design-token-based styling, shadcn buttons/cards/badges/sheet mobile navigation, lucide icons where applicable, preserved auth-aware homepage routes and interactions, scoped homepage dark blue-gray background, and full typecheck, lint, build, and test verification.
 - Tailwind v4 Preferred Syntax completed with app-owned canonical class rewrites for gradients, spacing tokens, opacity modifiers, CSS variable shorthand, and editor markdown alignment, while leaving shadcn primitives unchanged and preserving lint, typecheck, test, build, and homepage visual checks.
+- Korax Rebrand Phase 1 completed with tracked code, visible product surfaces, package metadata, docs, auth copy, verification email copy, homepage/footer/logo text, dashboard top-bar text, Stripe app info, rate-limit prefixes, demo email, and npm install-script approvals aligned to Korax.
