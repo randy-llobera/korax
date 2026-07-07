@@ -1,16 +1,77 @@
-# Current Feature
+# Current Feature: Korax Rebrand Phase 2 - External Providers And Secrets
 
 ## Status
 
-Not Started
+In Progress
 
 ## Goals
 
 <!-- Add goals here -->
+- Finish the external provider migration for the Korax rebrand before public launch.
+- Remove old-name attachment from public/admin provider resources where practical.
+- Rotate or recreate secrets that were exposed locally or tied to old project resources.
+- Decide provider-by-provider whether to rename existing resources or create brand new Korax resources.
+- Sync clean Korax environment variables into Vercel for development, preview, and production as needed.
+- Verify auth, email, upload, billing, AI, webhooks, and deployment settings against Korax resources.
 
 ## Notes
 
 <!-- Add notes here -->
+- Source spec: `context/features/korax-rebrand-plan.md`, phase 2.
+- GitHub repo `korax` already exists and is up to date.
+- Final provider outcome:
+  - GitHub repo, Vercel project, Neon project/branch, GitHub OAuth app, Resend setup, Upstash Redis database, Cloudflare R2 bucket, Stripe product/prices/webhook, OpenAI project/key, and DNS/domain provider were audited.
+  - New provider projects/resources were created where renaming was not possible.
+  - Existing keys were retained where resources could be safely renamed; keys/endpoints were updated where new resources were created.
+  - Vercel production env vars were updated for the Korax provider resources.
+  - Live app is using `https://korax-plum.vercel.app/` until a custom domain is purchased.
+  - Live smoke checks passed for account creation, email/password sign-in, GitHub OAuth sign-in, file upload, Pro subscription checkout, Stripe webhook processing, collection creation, snippet creation, and AI features.
+  - Email verification is intentionally disabled until a real sending domain can be verified in Resend. The Vercel default domain cannot be used for Resend sender-domain verification because its DNS records are not app-controlled.
+- Files expected to change during planning/documentation only:
+  - `context/current-feature.md`
+- Files that may change during implementation only if provider names, env examples, docs, or scripts need alignment:
+  - `.env.example`
+  - `README.md`
+  - `AGENTS.md`
+  - `context/features/korax-rebrand-plan.md`
+  - Provider-specific docs under `context/` or `docs/`
+- Provider decision plan:
+  1. GitHub: keep the newly created up-to-date `korax` repo; confirm old repo visibility, secrets, deploy keys, GitHub OAuth app ownership, and Vercel integration target.
+  2. Vercel: prefer a new `korax` project linked to the new repo so deploy history and env vars are clean; rename only if preserving existing deployment history is more important.
+  3. Neon: prefer a new Korax development branch/project if old-name exposure or leaked credentials are a concern; otherwise rename the dev project/branch. Keep production read-only unless explicitly asked to migrate data.
+  4. GitHub OAuth: prefer a new Korax OAuth app for clean client ID/client secret and callback URLs. Use separate dev and production OAuth apps if both environments store users in the same database.
+  5. Resend: prefer a Korax-owned verified sender/domain. Rotate API key and update auth email sender once DNS is verified.
+  6. Upstash Redis: prefer a new Korax-named database if current URL/token may be exposed or old-name branded. Renaming is acceptable only if token rotation and dashboard naming are sufficient.
+  7. Cloudflare R2: prefer a new `korax-files` bucket if public/admin naming matters or if credentials were exposed. Plan object copy only if existing uploaded files must survive.
+  8. Stripe: prefer renaming dashboard-visible product/customer portal branding if there are real customers; create new Korax product/prices only if there are no subscriptions or a deliberate migration plan exists. Always create/update webhook endpoint URL and rotate webhook secret.
+  9. OpenAI: rotate API key and use a Korax-named project if available in the account. No app code change is expected if env names remain stable.
+  10. Domain/DNS provider: configure final Korax domain, DNS records, Vercel domain assignment, Resend DNS records, and any email sender records before production verification.
+- Step-by-step approach:
+  1. Inventory current provider resources, current env var names, callback URLs, webhook URLs, and any old-name public surfaces.
+  2. Mark each provider as `rename`, `create new`, or `rotate only`, with the reason and migration impact.
+  3. Rotate local and provider secrets before using them in the new Vercel project.
+  4. Create or rename provider resources in this order: domain/DNS, Vercel, Neon, storage, Redis, Resend, GitHub OAuth, Stripe, OpenAI.
+  5. Add clean env vars to Vercel and pull/verify local project settings where needed.
+  6. Update callback and webhook URLs:
+     - Auth.js base URL and production URL.
+     - GitHub OAuth callback: `https://<korax-domain>/api/auth/callback/github`.
+     - Stripe webhook endpoint: `https://<korax-domain>/api/webhooks/stripe`.
+     - Resend sender/domain records.
+  7. Run local verification after env changes: `npm run typecheck`, `npm run lint`, `npm run test`, `npm run build`.
+  8. Run manual smoke checks after deployment: homepage, register/sign in, GitHub OAuth, email verification, dashboard, CRUD, uploads/downloads, Stripe checkout/portal/webhook, and AI actions.
+- Risks:
+  - OAuth and webhook callback mismatches can break sign-in or billing.
+  - Creating new Stripe prices can orphan existing subscriptions unless intentionally migrated.
+  - Creating a new R2 bucket requires copying objects if existing uploads must survive.
+  - Rotating database, Redis, R2, or auth secrets without updating all Vercel environments can cause runtime failures.
+  - Production Neon must remain read-only unless production migration is explicitly requested.
+- Minimal done checklist:
+  - Provider inventory completed with rename/create/rotate decisions.
+  - No old-name provider resource remains public-facing.
+  - All exposed or old project credentials are rotated or recreated.
+  - Vercel env vars are present for the intended environments.
+  - Auth, email, upload, billing, AI, and webhooks pass smoke checks against Korax resources.
+  - Verification commands run successfully or failures are documented with exact output.
 
 ## History
 
