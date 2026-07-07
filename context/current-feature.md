@@ -1,16 +1,24 @@
-# Current Feature
+# Current Feature: Fresh Database Cleanup
 
 ## Status
 
-Not Started
+In Progress
 
 ## Goals
 
-<!-- Add goals here -->
+- Determine the safest reset approach for both development and production databases.
+- Remove all test users and all user-owned data from both databases.
+- Apply Prisma migrations to both databases so schemas are current.
+- Run the available seed process where appropriate so both databases start from identical baseline data.
+- Verify development and production database contents match after cleanup.
 
 ## Notes
 
-<!-- Add notes here -->
+- App is live, but there are no real users yet.
+- Existing users and user-owned data are disposable test data.
+- Production is normally read-only by default in project rules; this feature explicitly requires production cleanup, but destructive/write actions must still state the target project and branch before execution.
+- Neon defaults: project `fancy-sound-03830381`, development branch `br-twilight-lake-amzju9vx`, production branch `br-proud-violet-am3tppgg`.
+- Need to inspect Prisma migrations, seed behavior, and database relationships before choosing truncate/reset/delete strategy.
 
 ## History
 

@@ -109,102 +109,31 @@ Done checklist:
 - New env vars exist in Vercel.
 - Auth, email, upload, billing, AI, and webhooks work against Korax services.
 
-## Phase 3: New Repository And Git History
+## Phase 3: Fresh Database Baseline
 
-Goal: create a clean Korax repository with no old project history.
-
-Approach:
-
-1. Create a new private GitHub repository named korax.
-2. Copy the rebranded working tree into a clean directory.
-3. Exclude:
-   - .env
-   - .env.production
-   - .next
-   - node_modules
-   - local logs/cache files
-
-4. Initialize fresh git history.
-5. Commit the rebranded app as the initial commit.
-6. Connect the new repo to the new Vercel project.
-
-Risks:
-
-- Accidentally committing local env files would leak credentials.
-- New repo loses previous issue/PR history, which is intended here.
-
-Done checklist:
-
-- Fresh repo exists.
-- First commit contains only safe tracked files.
-- No secret files are committed.
-- New remote points to the Korax repo.
-
-## Phase 4: Deployment And Smoke Testing
-
-Goal: deploy Korax and verify core workflows.
+Goal: reset development and production databases after launch prep so both start from the same seeded Korax demo baseline.
 
 Approach:
 
-1. Deploy to the new Vercel project.
-2. Run production migration/seed only against the intended Korax database.
-3. Verify:
-   - Homepage loads.
-   - Register/sign in works.
-   - Email verification works if enabled.
-   - GitHub OAuth works.
-   - Dashboard loads.
-   - Create/edit/delete item works.
-   - Collections work.
-   - Search works.
-   - File/image upload and download work.
-   - Stripe checkout, portal, and webhook work.
-   - AI actions work for Pro users.
+1. Verify Prisma migrations are current on both development and production.
+2. Add a guarded database data reset script that dry-runs by default and only deletes data with an explicit execute flag.
+3. Standardize the reset workflow:
+   - `npm run db:reset:data -- --execute`
+   - `npm run db:seed`
+   - `npm run db:test`
 
-4. Confirm old deployment is not linked from new public surfaces.
+4. Keep `npm run db:seed` as the default full seed path that creates `demo@korax.dev`, system item types, demo collections, and demo items.
+5. Verify development and production have matching counts and seeded item types after reset and seed.
 
 Risks:
 
-- Provider callback mismatch can break auth or billing.
-- Missing env vars may only surface at runtime.
-- Stripe webhooks require exact endpoint configuration.
+- Reset deletes all users, auth records, items, collections, tags, and item types except Prisma migration history.
+- File objects in external storage are not deleted by the database reset script.
+- Production reset must only be run after explicitly confirming the intended Neon project and branch.
 
 Done checklist:
 
-- New deployment is live.
-- Core workflows pass manually.
-- Build, lint, typecheck, and tests pass locally.
-- Provider dashboards show Korax naming.
-
-## Phase 5: Post-Launch Cleanup And Later UI Rebrand
-
-Goal: finish ownership work after the name and deployment are stable.
-
-Approach:
-
-1. Decide whether to archive or delete the old repo/deployment.
-2. Remove old Vercel project if no longer needed.
-3. Decommission old provider resources after confirming no data is needed.
-4. Plan a deeper UI pass:
-   - Homepage art direction
-   - Logo refinement
-   - App icon/favicon
-   - Open Graph image
-   - Color/token refinement
-   - Dashboard polish only where it improves usability
-
-5. Optional domain/email polish:
-   - Buy or configure Korax domain.
-   - Add branded transactional email sender.
-   - Update demo email to final domain.
-
-Risks:
-
-- Deleting old services too early can lose data or files.
-- UI redesign should not block the rebrand launch.
-
-Done checklist:
-
-- Old public surfaces are retired or hidden.
-- Korax has stable domain/deployment/provider setup.
-- Later visual rebrand has a separate scoped plan.
+- Development and production migrations are up to date.
+- Development and production contain the same seeded demo baseline.
+- `npm run db:seed` creates the demo user and useful demo data by default.
+- `npm run db:test` verifies the expected demo user, system item types, and baseline counts.
