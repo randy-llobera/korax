@@ -1,31 +1,16 @@
-# Current Feature: Weekly Upstash Redis Keepalive
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
 <!-- Add goals here -->
 
-- Add a protected `GET /api/cron/redis-keepalive` route that calls Upstash Redis `PING` once and succeeds only on `PONG`.
-- Schedule the route through Vercel Cron every Monday at 09:00 UTC with `0 9 * * 1`.
-- Require Vercel's `CRON_SECRET` bearer authorization and fail closed when the secret is missing or invalid.
-- Return clear success and failure status codes without exposing Redis credentials or provider error details.
-- Cover authorization, successful ping, unexpected response, and Redis failure behavior with focused route tests.
-
 ## Notes
 
 <!-- Add notes here -->
-
-- Files to change: `src/app/api/cron/redis-keepalive/route.ts`, `src/app/api/cron/redis-keepalive/route.test.ts`, `vercel.json`, and `.env.example`.
-- Create `Redis.fromEnv()` inside the handler using the existing `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` variables.
-- Return `200` with `{ "success": true }` only after receiving `PONG`; return `401` for failed cron authorization and `500` with `{ "success": false }` for Redis configuration, connectivity, or response failures.
-- Add `CRON_SECRET` to `.env.example`; configure a random value of at least 16 characters in Vercel Production.
-- Do not add retry logic, dependencies, shared Redis abstractions, or changes to `src/lib/rate-limit.ts`.
-- Vercel does not automatically retry failed cron invocations. Subsequent weekly runs provide multiple attempts within Upstash's documented 30-day inactivity period.
-- Upstash documents `PING` returning `PONG`, but does not explicitly document that `PING` resets inactivity; this feature assumes an executed command counts as database activity.
-- Verification: `npm test -- src/app/api/cron/redis-keepalive/route.test.ts`, `npm run typecheck`, `npm run lint`, and `npm run build`. After production deployment, run `vercel crons run /api/cron/redis-keepalive` and expect HTTP 200 plus a successful Vercel runtime log.
 
 ## History
 
@@ -106,3 +91,4 @@ In Progress
 - Korax Rebrand Phase 1 completed with tracked code, visible product surfaces, package metadata, docs, auth copy, verification email copy, homepage/footer/logo text, dashboard top-bar text, Stripe app info, rate-limit prefixes, demo email, and npm install-script approvals aligned to Korax.
 - Korax Rebrand Phase 2 completed with external provider resources audited and migrated or renamed across GitHub, Vercel, Neon, GitHub OAuth, Resend, Upstash Redis, Cloudflare R2, Stripe, OpenAI, and DNS/domain provider setup, Vercel env vars updated for the Korax services, Vercel deployment verified at `https://korax-plum.vercel.app/`, live smoke checks passing for auth, uploads, billing, Stripe webhook Pro updates, collections, snippets, and AI features, with email verification intentionally deferred until a real Resend sender domain is available.
 - Fresh Database Cleanup completed with dev and production Neon databases reset to matching seeded demo baselines, Prisma migrations and schema drift verified, a guarded `db:reset:data` script added, `npm run db:seed` standardized to create the Korax demo user and demo data, and `db:test` preserving baseline count checks.
+- Weekly Upstash Redis Keepalive completed with a `CRON_SECRET`-protected Vercel Cron route that sends a weekly Redis `PING`, a Monday 09:00 UTC production schedule, documented configuration, and focused route coverage for authorization and Redis response failures.
