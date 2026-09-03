@@ -1,16 +1,31 @@
-# Current Feature
+# Current Feature: Weekly Upstash Redis Keepalive
 
 ## Status
 
-Not Started
+In Progress
 
 ## Goals
 
 <!-- Add goals here -->
 
+- Add a protected `GET /api/cron/redis-keepalive` route that calls Upstash Redis `PING` once and succeeds only on `PONG`.
+- Schedule the route through Vercel Cron every Monday at 09:00 UTC with `0 9 * * 1`.
+- Require Vercel's `CRON_SECRET` bearer authorization and fail closed when the secret is missing or invalid.
+- Return clear success and failure status codes without exposing Redis credentials or provider error details.
+- Cover authorization, successful ping, unexpected response, and Redis failure behavior with focused route tests.
+
 ## Notes
 
 <!-- Add notes here -->
+
+- Files to change: `src/app/api/cron/redis-keepalive/route.ts`, `src/app/api/cron/redis-keepalive/route.test.ts`, `vercel.json`, and `.env.example`.
+- Create `Redis.fromEnv()` inside the handler using the existing `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` variables.
+- Return `200` with `{ "success": true }` only after receiving `PONG`; return `401` for failed cron authorization and `500` with `{ "success": false }` for Redis configuration, connectivity, or response failures.
+- Add `CRON_SECRET` to `.env.example`; configure a random value of at least 16 characters in Vercel Production.
+- Do not add retry logic, dependencies, shared Redis abstractions, or changes to `src/lib/rate-limit.ts`.
+- Vercel does not automatically retry failed cron invocations. Subsequent weekly runs provide multiple attempts within Upstash's documented 30-day inactivity period.
+- Upstash documents `PING` returning `PONG`, but does not explicitly document that `PING` resets inactivity; this feature assumes an executed command counts as database activity.
+- Verification: `npm test -- src/app/api/cron/redis-keepalive/route.test.ts`, `npm run typecheck`, `npm run lint`, and `npm run build`. After production deployment, run `vercel crons run /api/cron/redis-keepalive` and expect HTTP 200 plus a successful Vercel runtime log.
 
 ## History
 
